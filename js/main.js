@@ -1,42 +1,20 @@
 import images from './gallery-items.js';
-
-const galleryRef = document.querySelector('.js-gallery');
-const lightboxRef = document.querySelector('.js-lightbox');
-const overlayRef = document.querySelector('.lightbox__overlay');
-const imageRef = document.querySelector('.lightbox__image');
-const btnModalCloseRef = document.querySelector(
-  'button[data-action="close-lightbox"]',
-);
+import createGalleryMarkup from './create-gallery.js';
+import {
+  galleryRef,
+  lightboxRef,
+  overlayRef,
+  imageRef,
+  btnModalCloseRef,
+} from './dom.js';
 
 const galleryMarkup = createGalleryMarkup(images);
 galleryRef.insertAdjacentHTML('beforeend', galleryMarkup);
 galleryRef.addEventListener('click', openModal);
 
-function createGalleryMarkup(images) {
-  return images
-    .map(({ preview, original, description }) => {
-      return `<li class="gallery__item">
-  <a
-    class="gallery__link"
-    href="${original}"
-  >
-    <img
-      class="gallery__image"
-      src="${preview}"
-      data-source="${original}"
-      alt="${description}"
-    />
-  </a>
-</li>`;
-    })
-    .join('');
-}
-
-console.log(images);
-
 function openModal(event) {
   event.preventDefault();
-
+  let image = event.target;
   if (event.target.nodeName !== 'IMG') {
     return;
   }
@@ -44,8 +22,8 @@ function openModal(event) {
   btnModalCloseRef.addEventListener('click', closeModal);
   window.addEventListener('keydown', escapeClose);
   lightboxRef.classList.add('is-open');
-  imageRef.src = event.target.dataset.source;
-  imageRef.alt = event.target.alt;
+
+  madeImageRef(image);
 }
 
 function closeModal() {
@@ -53,12 +31,22 @@ function closeModal() {
   btnModalCloseRef.removeEventListener('click', closeModal);
   window.removeEventListener('keydown', escapeClose);
   lightboxRef.classList.remove('is-open');
-  imageRef.src = '';
-  imageRef.alt = '';
+
+  clearImageRef();
 }
 
 function escapeClose(event) {
   if (event.code === 'Escape') {
     closeModal();
   }
+}
+
+function madeImageRef(image) {
+  imageRef.src = image.dataset.source;
+  imageRef.alt = image.alt;
+}
+
+function clearImageRef() {
+  imageRef.src = ' ';
+  imageRef.alt = ' ';
 }
