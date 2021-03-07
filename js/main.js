@@ -23,7 +23,7 @@ function openModal(event) {
   window.addEventListener('keydown', escapeClose);
   lightboxRef.classList.add('is-open');
 
-  madeImageRef(image);
+  updateAttr(image.dataset.source, image.alt);
 }
 
 function closeModal() {
@@ -31,8 +31,8 @@ function closeModal() {
   btnModalCloseRef.removeEventListener('click', closeModal);
   window.removeEventListener('keydown', escapeClose);
   lightboxRef.classList.remove('is-open');
-
-  clearImageRef();
+  
+  updateAttr();
 }
 
 function escapeClose(event) {
@@ -41,12 +41,7 @@ function escapeClose(event) {
   }
 }
 
-function madeImageRef(image) {
-  imageRef.src = image.dataset.source;
-  imageRef.alt = image.alt;
-}
-
-function clearImageRef() {
-  imageRef.src = ' ';
-  imageRef.alt = ' ';
+function updateAttr(src = '', alt = '') {
+  imageRef.src = src;
+  imageRef.alt = alt;
 }
