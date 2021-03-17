@@ -20,6 +20,7 @@ function openModal(event) {
   }
   overlayRef.addEventListener('click', closeModal);
   btnModalCloseRef.addEventListener('click', closeModal);
+  document.addEventListener('keydown', createSlider);
   window.addEventListener('keydown', escapeClose);
   lightboxRef.classList.add('is-open');
 
@@ -29,9 +30,10 @@ function openModal(event) {
 function closeModal() {
   overlayRef.removeEventListener('click', closeModal);
   btnModalCloseRef.removeEventListener('click', closeModal);
+  document.removeEventListener('keydown', createSlider);
   window.removeEventListener('keydown', escapeClose);
   lightboxRef.classList.remove('is-open');
-  
+
   updateAttr();
 }
 
@@ -44,4 +46,42 @@ function escapeClose(event) {
 function updateAttr(src = '', alt = '') {
   imageRef.src = src;
   imageRef.alt = alt;
+}
+
+let currentIndex = 0;
+function createSlider(event) {
+  switch (event.code) {
+    case 'ArrowRight':
+      goToNextImage();
+      break;
+    case 'ArrowLeft':
+      goToPrevImage();
+      break;
+  }
+}
+
+function goToNextImage() {
+  if (currentIndex === images.length - 1) {
+    currentIndex = 0;
+  } else {
+    currentIndex += 1;
+  }
+
+  showImage();
+}
+
+function goToPrevImage() {
+  if (currentIndex === 0) {
+    currentIndex = images.length - 1;
+  } else {
+    currentIndex -= 1;
+  }
+
+  showImage();
+}
+
+function showImage() {
+  const activeImage = images[currentIndex];
+  imageRef.src = activeImage.original;
+  imageRef.alt = activeImage.alt;
 }
